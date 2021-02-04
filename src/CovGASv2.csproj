@@ -1,0 +1,64 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;x64</Platforms>
+    <Version>0.1.0</Version>
+    <Authors>wfDev</Authors>
+    <Company>WorldFusion</Company>
+    <Copyright>WorldFusion Co.,Ltd.</Copyright>
+    <ApplicationIcon>logFrame.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Dao\CreateSQL\CreateSequencer.txt" />
+    <None Remove="Dao\CreateSQL\CreateTableMiseqParams.txt" />
+    <None Remove="Dao\CreateSQL\CreateTableSample.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LivetCask" Version="3.2.1" />
+    <PackageReference Include="sqlite" Version="3.13.0" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="FluGASv25">
+      <HintPath>..\..\FluGASv25\FluGASv25\bin\Debug\netcoreapp3.1\FluGASv25.dll</HintPath>
+    </Reference>
+    <Reference Include="WfArrangement">
+      <HintPath>..\..\WfArrangement\WfArrangement\bin\Debug\WfArrangement.dll</HintPath>
+    </Reference>
+    <Reference Include="WfComponent">
+      <HintPath>..\..\WfComponent\WfComponent\bin\Debug\WfComponent.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Dao\CreateSQL\CreateSequencer.txt" />
+    <Resource Include="Dao\CreateSQL\CreateTableMiseqParams.txt" />
+    <Resource Include="Dao\CreateSQL\CreateTableSample.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="copy /y $(ProjectDir)..\Parts\sequences.csv $(TargetDir)data&#xD;&#xA;copy /y $(ProjectDir)..\Parts\FluGASv2.pdf $(TargetDir)data&#xD;&#xA;" />
+  </Target>
+
+</Project>

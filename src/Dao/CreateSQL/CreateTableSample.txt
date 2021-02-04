@@ -1,0 +1,28 @@
+﻿DROP TABLE IF EXISTS SAMPLE;
+CREATE TABLE SAMPLE (
+ID INTEGER PRIMARY KEY AUTOINCREMENT,
+Name        VARCHAR default '',
+ViewName VARCHAR default '',
+File1          VARCHAR default '',
+File2          VARCHAR default '',
+Cns_Nucs          VARCHAR default '',
+Cover_Ave        VARCHAR default '',
+Cover_Ratio      VARCHAR default '',
+Cns_AaVariation VARCHAR default '',
+Accession           VARCHAR default '',
+Release_Date     VARCHAR default '',
+Species              VARCHAR default '',
+Length               VARCHAR default '',
+Type                  VARCHAR default '',
+Completeness     VARCHAR default '',
+Geo_Location      VARCHAR default '',
+Host                   VARCHAR default '',
+Collection_Date   VARCHAR default '',
+Genbank_Title     VARCHAR default '',
+Gisaid_Clade        VARCHAR default '', 
+Nextstrain_Clade VARCHAR default '', 
+Pram_ID      INTEGER default 0,
+Is_Delete     INTEGER default 0,
+Date  VARCHAR DEFAULT  (DATETIME('now','localtime')),
+MEMO  VARCHAR default ''
+);

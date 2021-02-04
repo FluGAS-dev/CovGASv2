@@ -1,0 +1,189 @@
+﻿<UserControl x:Class="CovGASv2.Views.AnalysesView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CovGASv2.Views.Behavior"
+        mc:Ignorable="d" >
+    <UserControl.Resources>
+        <ResourceDictionary Source="CovStyles.xaml" />
+    </UserControl.Resources>
+
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="1" Background="#eae7e7" 
+            HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            　【analyses】<LineBreak/>
+            　解析時のパラメータセット設定と解析ファイルを指定します。<LineBreak/>
+            　設定後に画面右下の［Analysis］ボタンを押下します。
+        </TextBlock>
+        <ScrollViewer Grid.Row="1" Grid.Column="1" >
+            <Grid Background="#eae7e7" Margin="0,5,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="8*" />
+                    <RowDefinition Height="5"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1"/>
+                </Grid.ColumnDefinitions>
+                <!-- sequencer -->
+                <GroupBox Grid.Column="1" Grid.Row="0" Background="#f9f8eb"
+                FontSize="24"
+                Margin="10,0,20,0"
+                Header="Select Sequencer."
+                ToolTip="select analyses sequence data, please choose either">
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="5*"/>
+                            <ColumnDefinition Width="8*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,1"
+                            Name="MiSeq" Content="MiSeq data." FontSize="18"
+                            Style="{StaticResource SliderCheckBox}"
+                            IsChecked="{Binding IsMiseq}"/>
+
+                        <CheckBox Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,1"
+                            Name="MinION" Content="MinION data." FontSize="18"
+                            Style="{StaticResource SliderCheckBox}"
+                            IsEnabled="{Binding IsMinionEnabled}"      
+                            IsChecked="{Binding IsMinion}" Cursor="Hand" />
+
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"  Margin="0,3,0,1">
+                            <CheckBox VerticalAlignment="Center"  Margin="0,0,0,0"
+                                Name="OneSample" Content="is 1-run" FontSize="14" 
+                                IsEnabled="{Binding IsMinion}"  
+                                IsChecked="{Binding IsOneSample}" 
+                                ToolTip="if checked, data that you input are considered to be 1-run"/>
+                            <CheckBox VerticalAlignment="Center" Margin="13,0,0,0"
+                                Name="BarcodeSeparate" Content="barcode separate" FontSize="14" 
+                                IsEnabled="{Binding IsMinion}"  
+                                IsChecked="{Binding IsBarcode}" 
+                                ToolTip="if checked, input your data separate"/>
+
+                        </StackPanel>
+
+                    </Grid>
+                </GroupBox>
+                <!-- parameter -->
+                <GroupBox Grid.Column="1" Grid.Row="1" Background="#f9f8eb"
+                    FontSize="24"
+                    Margin="10,0,20,0"
+                    Header="Select Use Parameters."
+                    IsEnabled="{Binding IsParameterEdit}" >
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label />
+                            <ComboBox   
+                                Style="{StaticResource BaseComboBox}"
+                                AutomationProperties.HelpText="Select Parameter-set." 
+                                ItemsSource="{Binding SelectParameters, Mode=TwoWay}" SelectedValue="{Binding SelectedParameter, Mode=TwoWay}" />
+                            <Label />
+                            <Button Height="16" Width="32" FontSize="12"   
+                                Style="{StaticResource FlatButton}"
+                                VerticalAlignment="Center"
+                                Content="  edit"  
+                                Command="{Binding EditParameterCommand, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label  />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Grid.Column="1" Grid.Row="2" Background="#f9f8eb"
+                    FontSize="24"
+                    Margin="10,0,20,0"
+                    Header="Select Data."
+                    IsEnabled="{Binding IsParameterEdit}" 
+                    ToolTip="Click select button, choose your data folder or file.\nOr, drag and drop your data">
+                    <Grid Background="#eae7e7" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" >
+                            <Button HorizontalAlignment="Left" VerticalAlignment="Bottom" Height="18" FontSize="14"   FontFamily="Meiryo" FontWeight="Bold" Margin="20,0,0,0"
+                            Style="{StaticResource FlatButton}"
+                            Content=" Select Folder(s) "  
+                            Command="{Binding SelectFolderCommand, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsMinion}" />
+
+                            <Label Width="30"  Height="30"  Content="/" VerticalAlignment="Bottom"/>
+
+                            <Button HorizontalAlignment="Left" VerticalAlignment="Bottom" Height="18" FontSize="14"   FontFamily="Meiryo" FontWeight="Bold"
+                                Style="{StaticResource FlatButton}"
+                                Content=" Select File(s)"  
+                                Command="{Binding SelectFileCommand, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <Label HorizontalAlignment="Left"  Width="30" Height="30" VerticalAlignment="Top"></Label>
+                            <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="16" FontSize="12"   FontFamily="Meiryo" FontWeight="Regular"
+                                Style="{StaticResource FlatButton}"
+                                Content=" clear"  
+                                Command="{Binding SelectFileClearCommand, UpdateSourceTrigger=PropertyChanged}" />
+
+                        </StackPanel>
+
+                        <ListView Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            x:Name="SelectDat" 
+                            FontSize="12" FontFamily="Meiryo"
+                            ItemsSource="{Binding SelectDataList, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                            SelectedItem="{Binding SelectDataItem}" Grid.RowSpan="2" >
+
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Setter
+                                        Property="Tag"
+                                        Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListView}}" />
+
+                                    <Setter Property="ContextMenu">
+                                        <Setter.Value>
+                                            <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                <MenuItem
+                                                    Header="Remove"
+                                                    Command="{Binding SelectDataCommand}"/>
+                                            </ContextMenu>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <i:Interaction.Behaviors>
+                                <local:FileDropBehavior Command="{Binding AddItemsCommand}" />
+                            </i:Interaction.Behaviors>
+                        </ListView>
+
+                    </Grid>
+
+                </GroupBox>
+
+            </Grid>
+        </ScrollViewer>
+        <Button Grid.Column="1" Grid.Row="7" Margin="0,0,10,0"
+                Content="{Binding AnalysisButton}" HorizontalAlignment="Right"
+                Style="{StaticResource FlatButton}"
+                Command="{Binding AnarysisExecuteCommand}" />
+    </Grid>
+</UserControl>

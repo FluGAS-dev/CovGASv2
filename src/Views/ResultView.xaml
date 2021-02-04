@@ -1,0 +1,397 @@
+﻿<UserControl x:Class="CovGASv2.Views.ResultView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+             mc:Ignorable="d" >
+    <UserControl.Resources>
+        <ResourceDictionary Source="CovStyles.xaml" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Background="#eae7e7" 
+            HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            　【Results】<LineBreak/>
+            　解析結果を表示します。<LineBreak/>
+            　リスト選択してからDetailを表示します。<LineBreak/>
+        </TextBlock>
+
+        <Grid Grid.Row="1" Grid.Column="1" Background="#eae7e7" 
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3"/>
+                <ColumnDefinition Width="5*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 真ん中の線　-->
+            <GridSplitter Grid.Row="0" Grid.Column="1"
+                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
+                    Width="3" />
+
+            <!-- 左側リスト -->
+            <Grid Grid.Column="0" Grid.Row="0" >
+                <Grid Background="#eae7e7" 
+                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <!-- <RowDefinition Height="55" />
+                        -->
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DataGrid Grid.Column="0" Grid.Row="0"
+                            VerticalAlignment="Stretch" HorizontalAlignment="Stretch" EnableRowVirtualization="False"
+                            HorizontalScrollBarVisibility="Visible"
+                            AutoGenerateColumns="False"  Opacity="0.95"
+                            CanUserAddRows="False"
+                            ItemsSource="{Binding SampleList}" SelectedValue="{Binding SelectSample}" >
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Tag" 
+                                        Value="{Binding RelativeSource={RelativeSource AncestorType=DataGrid},
+                                        Path=DataContext}"/>
+                                <Setter Property="ContextMenu">
+                                    <Setter.Value>
+                                        <ContextMenu DataContext="{Binding Path=PlacementTarget.Tag,
+                                            RelativeSource={RelativeSource Self}}">
+                                            <MenuItem Header="Hide" Command="{Binding SampleEditCommand}"/>
+                                            <MenuItem Header="Delete" Command="{Binding SampleDeleteCommand}"/>
+                                        </ContextMenu>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns >
+                            <DataGridTextColumn  Width="70"
+                                Header="Date"  
+                                Binding="{Binding Date_Only}" IsReadOnly="True"  />
+                            <DataGridTextColumn Width="auto" MinWidth="400"
+                                Header="Name" 
+                                Binding="{Binding ViewName}" IsReadOnly="True" />
+                        </DataGrid.Columns>
+
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                            </Style>
+                        </DataGrid.RowStyle>
+                    </DataGrid>
+
+                </Grid>
+            </Grid>
+
+            <!-- 右側 -->
+            <Grid Grid.Column="2" Grid.Row="0" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="9*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!-- Sample Result." -->
+
+                <ScrollViewer Grid.Row="0" Grid.Column="0" VerticalScrollBarVisibility="Auto" >
+                    <GroupBox Grid.Column="0" Grid.Row="0"
+                        Background="#f9f8eb"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        FontSize="18"
+                        Header="Sample Result.">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="3"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="4*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Grid.Column="0" Grid.Row="0" 
+                                    HorizontalContentAlignment="Stretch" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Style="{StaticResource BaseLabel}" 
+                                    Content="Name" />
+                            <Label Grid.Column="0" Grid.Row="1" 
+                                    HorizontalContentAlignment="Stretch" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Style="{StaticResource BaseLabel}" 
+                                    Content="ExecDate" />
+
+                            <!-- current data -->
+                            <TextBox Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="4"
+                                    VerticalAlignment="Center" HorizontalAlignment="Stretch"  Width="Auto" Margin="0,0,50,0"
+                                    FontSize="13" FontWeight="DemiBold" Style="{StaticResource PropatiesTextBox}" 
+                                    Name="SampleName" 
+                                    Text="{Binding SampleName}"/>
+
+                            <Button Grid.Column="5" Grid.Row="0" Margin="0,0,8,0"
+                                    Content="commit" HorizontalAlignment="Right"
+                                    FontSize="9"
+                                    ToolTip="change sample name."
+                                    Style="{StaticResource FlatButton}"
+                                    Command="{Binding ChangeViewNameCommand}" />
+
+                            <Label Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Stretch" Width="Auto" Margin="0" 
+                                    Style="{StaticResource BaseLabel}" 
+                                    Name="ExecDate" 
+                                    Content="{Binding ExecDate}" />
+                        </Grid>
+                    </GroupBox>
+                </ScrollViewer>
+                
+                <!-- Sample Detail -->
+                <ScrollViewer Grid.Column="0" Grid.Row="1" VerticalScrollBarVisibility="Auto" >
+                    <GroupBox Grid.Column="0" Grid.Row="1" Background="#f9f8eb"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        FontSize="18" Header="Result Detail.">
+
+                        <TabControl Name="SampleDitailTabs"
+                            TabStripPlacement="Top"
+                            ItemsSource="{Binding SampleTabs}"
+                            SelectedIndex="{Binding TabIndex}" >
+                            <TabControl.ItemTemplate>
+                                <!-- ヘッダのテンプレート -->
+                                <DataTemplate >
+                                    <TextBlock Name="TabName"
+                                        Text="{Binding TabName}" FontSize="10" />
+                                </DataTemplate>
+                            </TabControl.ItemTemplate>
+
+                            <TabControl.ContentTemplate>
+                                <!-- Detail tab -->
+                                <DataTemplate>
+                                    <Grid >
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="5"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="7*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <!-- detail info template-->
+                                        <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
+                                            VerticalAlignment="Center" HorizontalAlignment="Right" Width="Auto"
+                                            Style="{StaticResource BaseLabel}" 
+                                            Name="Reference" Content="Reference" />
+                                        <!--
+                                        <TextBox Grid.Column="2" Grid.Row="0" 
+                                            VerticalAlignment="Center" HorizontalAlignment="Stretch"  Width="Auto" Height="Auto"
+                                            FontSize="13" FontWeight="DemiBold" Style="{StaticResource LabelLikeTextBox}" 
+                                            Name="SampleName" 
+                                            Text="{Binding Accession}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseDown">
+                                                    <l:LivetCallMethodAction MethodName="OpenNcbiCommand" MethodTarget="{Binding}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </TextBox>
+                                        -->
+                                        <Button  Grid.Column="2" Grid.Row="0" 
+                                            VerticalAlignment="Center" HorizontalAlignment="Left"  Width="Auto" Height="Auto"
+                                            FontSize="14" FontWeight="DemiBold" Style="{StaticResource ModernButtonStyle}" 
+                                            Name="SampleName" 
+                                            ToolTip="Open ncbi site."
+                                            Content="{Binding Accession}"
+                                            Command="{Binding OpenNcbiCommand}"  />
+
+
+                                        <TextBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"
+                                            VerticalAlignment="Top" HorizontalAlignment="Stretch" Width="Auto"  FontSize="10"
+                                            Style="{StaticResource LabelLikeTextBox}" 
+                                            Text="{Binding Genbank_Title}" />
+
+                                        <Label Grid.Column="1" Grid.Row="2" 
+                                            VerticalAlignment="Center" HorizontalAlignment="Right" Width="Auto" Margin="0" 
+                                            Style="{StaticResource BaseLabel}" 
+                                            Name="Spices" Content="Spices" />
+                                        <TextBox Grid.Column="2" Grid.Row="2" 
+                                            Style="{StaticResource LabelLikeTextBox}"  FontWeight="DemiBold" 
+                                            Text="{Binding Species}"/>
+
+                                        <Label Grid.Column="1" Grid.Row="3" 
+                                            VerticalAlignment="Center" HorizontalAlignment="Right" Width="Auto" Margin="0" 
+                                            Style="{StaticResource BaseLabel}" 
+                                            Name="Host" Content="Host" />
+                                        <TextBox Grid.Column="2" Grid.Row="3" 
+                                            Style="{StaticResource LabelLikeTextBox}"  FontWeight="DemiBold" 
+                                            Text="{Binding Host}"/>
+
+
+                                        <Label Grid.Column="1" Grid.Row="4" 
+                                            VerticalAlignment="Center" HorizontalAlignment="Right" Width="Auto" Margin="0" 
+                                            Style="{StaticResource BaseLabel}" 
+                                            Name="Type" Content="SequenceType" />
+                                        <TextBox Grid.Column="2" Grid.Row="4" 
+                                            Style="{StaticResource LabelLikeTextBox}"  FontWeight="DemiBold" 
+                                            Text="{Binding Type}"/>
+
+                                        <Label Grid.Column="1" Grid.Row="5" 
+                                            VerticalAlignment="Center" HorizontalAlignment="Right" Width="Auto" Margin="0" 
+                                            Style="{StaticResource BaseLabel}" 
+                                            Name="Geo_Location" Content="Geo_Location" />
+                                        <TextBox Grid.Column="2" Grid.Row="5" 
+                                            Style="{StaticResource LabelLikeTextBox}"  FontWeight="DemiBold" 
+                                            Text="{Binding Geo_Location}"/>
+
+                                        <!-- reference date -->
+                                        <Label Grid.Column="1" Grid.Row="6"
+                                                VerticalAlignment="Center" HorizontalAlignment="Right" Width="Auto"
+                                                Style="{StaticResource BaseLabel}" 
+                                                Content="Collection Date" />
+                                        
+                                        <StackPanel Orientation="Horizontal"  Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="3" >
+                                            <TextBox 
+                                                Style="{StaticResource LabelLikeTextBox}"  FontWeight="DemiBold" 
+                                                Text="{Binding Collection_Date}"/>
+                                            
+                                            <Label Margin="10,0,0,0"
+                                                VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="Auto"
+                                                Style="{StaticResource BaseLabel}" 
+                                                Content="Release Date" />
+                                            <TextBox  Margin="2,0,0,0"
+                                                Style="{StaticResource LabelLikeTextBox}"  FontWeight="DemiBold" 
+                                                Text="{Binding Release_Date}"/>
+                                        </StackPanel>
+
+                                        <!-- gisaid clade -->
+                                        <Label Grid.Column="1" Grid.Row="7" 
+                                            VerticalAlignment="Center" HorizontalAlignment="Right" Width="Auto" Margin="0" 
+                                            Style="{StaticResource BaseLabel}" 
+                                            Name="GisaidClade" Content="GisaidClade" />
+                                        <TextBox Grid.Column="2" Grid.Row="7" 
+                                            Style="{StaticResource SmallLabelLikeTextBox}"  FontWeight="DemiBold" 
+                                            Text="{Binding Gisaid_Clade}"/>
+
+                                        <!-- nextstrain clade -->
+                                        <Label Grid.Column="1" Grid.Row="8" 
+                                            VerticalAlignment="Center" HorizontalAlignment="Right" Width="Auto" Margin="0" 
+                                            Style="{StaticResource BaseLabel}" 
+                                            Name="NextstrainClade" Content="NextstrainClade" />
+                                        <TextBox Grid.Column="2" Grid.Row="8" 
+                                            Style="{StaticResource SmallLabelLikeTextBox}"  FontWeight="DemiBold" 
+                                            Text="{Binding Nextstrain_Clade}"/>
+
+                                        <StackPanel Orientation="Vertical"  Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="3">
+                                            <Label 
+                                                HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Width="Auto"
+                                                Style="{StaticResource BaseLabel}" 
+                                                Content="Created Consensus nucreotide sequence:" />
+                                            <StackPanel Orientation="Horizontal"  Grid.ColumnSpan="3"
+                                                    HorizontalAlignment="Stretch"
+                                                    Width="auto">
+                                                <Label Margin="5,0,0,0"
+                                                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="Auto"
+                                                    Style="{StaticResource BaseLabel}" 
+                                                    Content="Reference Length:" />
+                                                <TextBox  Margin="0,0,0,0"
+                                                    Style="{StaticResource LabelLikeTextBox}"  FontWeight="DemiBold" 
+                                                    Text="{Binding Length}"/>
+
+                                                <Label Margin="5,0,0,0"
+                                                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="Auto" 
+                                                    Style="{StaticResource BaseLabel}" 
+                                                    Content="Ratio:" />
+                                                <TextBox  Margin="0,0,0,0"
+                                                    Style="{StaticResource LabelLikeTextBox}"  FontWeight="DemiBold" 
+                                                    Text="{Binding Cover_Ratio}"/>
+                                                <Label Margin="5,0,0,0"
+                                                    VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="Auto"
+                                                    Style="{StaticResource BaseLabel}" 
+                                                    Content="Cover_Ave:" />
+                                                <TextBox  Margin="0,0,0,0"
+                                                    Style="{StaticResource LabelLikeTextBox}"  FontWeight="DemiBold" 
+                                                    Text="{Binding Cover_Ave}"/>
+                                            </StackPanel>
+
+                                            <TextBox 
+                                                VerticalAlignment="Center" HorizontalAlignment="Stretch"  Width="Auto" Height="Auto"
+                                                FontSize="8" FontWeight="DemiBold" Style="{StaticResource PropatiesTextBox}" 
+                                                Text="{Binding Cns_Nucs}"/>
+
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </TabControl.ContentTemplate>
+                        </TabControl>
+                    </GroupBox>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+        <Label Grid.Column="1" Grid.Row="2"
+                HorizontalAlignment="Left"
+                Name="FooterMessage"
+                Content="{Binding FooterMessage , Mode=TwoWay}" />
+
+        <StackPanel  Orientation="Horizontal"  Grid.Column="1" Grid.Row="2" Margin="0,0,50,0"
+                     HorizontalAlignment="Center">
+            <Button  Margin="0,0,10,0"
+                Content="VCF-nucleotide" HorizontalAlignment="Stretch"
+                Style="{StaticResource FlatButton}"
+                Command="{Binding OpenVcfNucCommand}"  />
+            <Button  Margin="0,0,10,0"
+                Content="VCF-aminoacid" HorizontalAlignment="Stretch"
+                Style="{StaticResource FlatButton}"
+                Command="{Binding OpenVcfAaCommand}"  />
+            <Button  Margin="0,0,10,0"
+                Content="map view" HorizontalAlignment="Stretch"
+                Style="{StaticResource FlatButton}"
+                Command="{Binding OpenMapViewCommand}"  />
+        </StackPanel>
+        
+        <StackPanel  Orientation="Horizontal"  Grid.Column="1" Grid.Row="2" Margin="0,0,10,0"
+                     HorizontalAlignment="Right">
+            <Button  Margin="0,0,10,0"
+                Content="ExportResult" HorizontalAlignment="Stretch"
+                Style="{StaticResource FlatButton}"
+                Command="{Binding OpenHtaCommand}"  />
+            <Button  Margin="0,0,10,0"
+                Content="Alignment" HorizontalAlignment="Right"
+                Style="{StaticResource FlatButton}"
+                Command="{Binding OpenAlignmentCommand}"  />
+            <!--     tree     -->
+            <Button  Margin="0,0,10,0"
+                Content="Tree" HorizontalAlignment="Right"
+                Style="{StaticResource FlatButton}"
+                Command="{Binding OpenTreeCommand}"  />
+
+        </StackPanel>
+
+    </Grid>
+
+</UserControl>
